@@ -6,63 +6,207 @@
 
 package com.indeema.introview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import java.util.List;
 
 public class IntroView extends RelativeLayout {
 
-    private List<IntroItem> mItemList;
+    private final int DEFAULT_IMAGE_SIZE = 128;
+    private final long SWITCH_ITEM_DURATION = 1200;
+    private final long START_ANIMATION_DURATION = 1200;
+    private final float ITEM_ALPHA_MIN = 0.3f;
+    private final float ITEM_ALPHA = 0.5f;
+    private final float ITEM_SCALE_MIN = 0.4f;
+    private final float ITEM_SCALE = 0.6f;
+    private final float ELLIPSIZE_X = 1f;
+    private final float ELLIPSIZE_Y = 0.7f;
 
-    public IntroView(Context context, List<IntroItem> mItemList) {
+    private List<IntroModel> mItemList;
+    private View[] mIntroItems;
+    private int mSelectedItemIndex;
+    private int mDisplayWidth;
+    private int mQuarterWidth;
+    private int mIntroRadius;
+    private int[] mAngles;
+
+    public IntroView(Context context, List<IntroModel> mItemList) {
         super(context);
         this.mItemList = mItemList;
-        init(context);
+        init((Activity) context);
     }
 
     public IntroView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init((Activity) context);
     }
 
     public IntroView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init((Activity) context);
     }
 
-    private void init(Context context) {
-        if (mItemList == null) {
+    private void init(Activity activity) {
+        if (mItemList == null || activity == null) {
             return;
         }
+        mSelectedItemIndex = - 1;
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                (int) IntroUtils.convertDpToPixel(context, 50),
-                (int) IntroUtils.convertDpToPixel(context, 50));
+        // Get base screen data
+        mDisplayWidth = DisplayUtils.getDisplayWidth(activity);
+        mQuarterWidth = mDisplayWidth / mItemList.size();
+        mIntroRadius = (int) ((mDisplayWidth - DisplayUtils.getDensity(activity) * DEFAULT_IMAGE_SIZE) / 2);
+        mAngles = new int[]{0, -90, -180, -270};
 
-        for (IntroItem introItem : mItemList) {
-            View view = new View(context);
-            view.setBackgroundResource(R.color.image_background);
-            view.setLayoutParams(params);
+        setBackgroundColor(ContextCompat.getColor(activity, R.color.image_background));
+        RelativeLayout.LayoutParams containerParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        containerParams.addRule(CENTER_IN_PARENT);
+        this.setLayoutParams(containerParams);
+
+
+        mIntroItems = new View[mItemList.size()];
+        addViewsToParent(activity, mIntroItems);
+
+        ViewUtils.setZ(activity, 6, TypedValue.COMPLEX_UNIT_DIP, mIntroItems);
+        ViewUtils.scaleViews(0.7f, mIntroItems);
+        ViewUtils.setViewsAlpha(1f, mIntroItems);
+
+        mSelectedItemIndex = mIntroItems.length - 1;
+        startAnimation();
+    }
+
+    private void addViewsToParent(Activity activity, View[] mIntroItems) {
+        // Hardcoded width/height for views
+        RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(
+                (int) ViewUtils.convertDpToPixel(activity, DEFAULT_IMAGE_SIZE),
+                (int) ViewUtils.convertDpToPixel(activity, DEFAULT_IMAGE_SIZE));
+        viewParams.addRule(CENTER_IN_PARENT);
+
+        // Init views
+        for (int i = 0; i < mItemList.size(); i++) {
+            View view = new View(activity);
+            view.setId(i);
+            ViewUtils.setBackground(activity, mItemList.get(i).getmDrawableResourceId(), view);
+            view.setLayoutParams(viewParams);
+            view.setPadding((int) ViewUtils.convertDpToPixel(activity, 20),
+                    (int) ViewUtils.convertDpToPixel(activity, 20),
+                    (int) ViewUtils.convertDpToPixel(activity, 20),
+                    (int) ViewUtils.convertDpToPixel(activity, 20));
             this.addView(view);
+            mIntroItems[i] = view;
         }
+    }
 
+    private void startAnimation() {
+        int maxAmplitude = mQuarterWidth / 2;
+
+        AnimationUtils.moveViewHorizontallySin(mIntroItems[0], mIntroRadius, maxAmplitude, START_ANIMATION_DURATION, null);
+        AnimationUtils.moveViewVerticallySin(mIntroItems[1], (int) (-mIntroRadius * 0.7), maxAmplitude, START_ANIMATION_DURATION, null);
+        AnimationUtils.moveViewHorizontallySin(mIntroItems[2], -mIntroRadius, -maxAmplitude, START_ANIMATION_DURATION, null);
+        AnimationUtils.moveViewVerticallySin(mIntroItems[3], (int) (mIntroRadius * 0.7), -maxAmplitude, START_ANIMATION_DURATION,
+                new AnimationUtils.AnimationCallback() {
+            @Override
+            public void onAnimationStart() {
+            }
+
+            @Override
+            public void onAnimationEnd() {
+                turnRight();
+            }
+        });
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+
+    public void turnRight() {
+        for (int i = 0; i < mIntroItems.length; i++) {
+            final int finalI = i;
+            if (getNextItemIndex() == i) {
+                AnimationUtils.moveViewCircularWithScaling(mIntroItems[i], mIntroRadius,
+                        mAngles[i], mAngles[i] + 90, 1f, 1f, ELLIPSIZE_X, ELLIPSIZE_Y, SWITCH_ITEM_DURATION,
+                        new AnimationUtils.AnimationEndCallback() {
+                            @Override
+                            public void onAnimationEnd() {
+                                mAngles[finalI] += 90;
+                            }
+                        });
+            } else if (mSelectedItemIndex == i) {
+                AnimationUtils.moveViewCircularWithScaling(mIntroItems[i], mIntroRadius,
+                        mAngles[i], mAngles[i] + 90, ITEM_SCALE, ITEM_ALPHA, ELLIPSIZE_X, ELLIPSIZE_Y, SWITCH_ITEM_DURATION,
+                        new AnimationUtils.AnimationEndCallback() {
+                            @Override
+                            public void onAnimationEnd() {
+                                mAngles[finalI] += 90;
+                            }
+                        });
+            } else if (getNextItemIndex(getNextItemIndex()) == i) {
+                AnimationUtils.moveViewCircularWithScaling(mIntroItems[i], mIntroRadius,
+                        mAngles[i], mAngles[i] + 90, ITEM_SCALE, ITEM_ALPHA, ELLIPSIZE_X, ELLIPSIZE_Y, SWITCH_ITEM_DURATION,
+                        new AnimationUtils.AnimationEndCallback() {
+                            @Override
+                            public void onAnimationEnd() {
+                                mAngles[finalI] += 90;
+                            }
+                        });
+            } else {
+                AnimationUtils.moveViewCircularWithScaling(mIntroItems[i], mIntroRadius,
+                        mAngles[i], mAngles[i] + 90, ITEM_SCALE_MIN, ITEM_ALPHA_MIN, ELLIPSIZE_X, ELLIPSIZE_Y, SWITCH_ITEM_DURATION,
+                        new AnimationUtils.AnimationEndCallback() {
+                            @Override
+                            public void onAnimationEnd() {
+                                mAngles[finalI] += 90;
+                            }
+                        });
+            }
+        }
+
+        mSelectedItemIndex = getNextItemIndex();
+    }
+
+    public void turnLeft() {
 
     }
 
-    public void moveToNext() {
-
+    private int getPreviousItemIndex() {
+        return getPreviousItemIndex(mSelectedItemIndex);
     }
 
-    public void moveToPrevious() {
+    private int getPreviousItemIndex(int currentIndex) {
+        if (currentIndex == 0) {
+            return mIntroItems.length - 1;
+        } else {
+            return currentIndex - 1;
+        }
+    }
 
+    private int getNextItemIndex() {
+        return getNextItemIndex(mSelectedItemIndex);
+    }
+
+    private int getNextItemIndex(int currentIndex) {
+        if (currentIndex == mIntroItems.length - 1) {
+            return 0;
+        } else {
+            return currentIndex + 1;
+        }
     }
 }

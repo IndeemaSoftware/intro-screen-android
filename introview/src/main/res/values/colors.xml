@@ -2,5 +2,6 @@
 <resources>
 
     <color name="image_background">#0c3f71</color>
+    <color name="test">#fff</color>
 
 </resources>

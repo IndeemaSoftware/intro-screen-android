@@ -12,22 +12,29 @@ package com.indeema.introview;
  * Date: January, 19, 2017
  * Time: 6:34 PM
  */
-public class IntroItem {
+public class IntroModel {
 
     private String mTitle;
     private int mDrawableResourceId;
 
-    public IntroItem(String title) {
+    public IntroModel(String title) {
         this.mTitle = title;
     }
 
-    public IntroItem(int mDrawableResourceId) {
+    public IntroModel(int mDrawableResourceId) {
         this.mDrawableResourceId = mDrawableResourceId;
     }
 
-    public IntroItem(String mTitle, int mDrawableResourceId) {
+    public IntroModel(String mTitle, int mDrawableResourceId) {
         this.mTitle = mTitle;
         this.mDrawableResourceId = mDrawableResourceId;
     }
 
+    public String getmTitle() {
+        return mTitle;
+    }
+
+    public int getmDrawableResourceId() {
+        return mDrawableResourceId;
+    }
 }
