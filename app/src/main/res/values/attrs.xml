@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PageIndicatorWidget">
+        <attr name="piw_default_color" format="color"/>
+        <attr name="piw_selected_color" format="color"/>
+        <attr name="piw_items_count" format="integer"/>
+        <attr name="piw_selected_item" format="integer"/>
+        <attr name="piw_item_size" format="dimension"/>
+        <attr name="piw_item_space" format="dimension"/>
+    </declare-styleable>
+
+</resources>

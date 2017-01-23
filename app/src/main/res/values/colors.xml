@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="gray">#fff</color>
+    <color name="colorPrimary">#1b1b1b</color>
+    <color name="colorPrimaryDark">#121212</color>
+    <color name="colorAccent">#104068</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="gray">#2b2b2b</color>
+
+    <!--PageIndicator colors-->
+    <color name="color_app_grey_dark">#bfbfbf</color>
+    <color name="color_red">#a72b31</color>
+
+    <color name="color_logo_red">#a72b31</color>
+    <color name="color_black_66_opacity">#a8000000</color>
+    <color name="green">#0c731c</color>
+
 </resources>

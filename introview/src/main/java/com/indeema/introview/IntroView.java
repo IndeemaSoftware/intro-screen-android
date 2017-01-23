@@ -8,8 +8,6 @@ package com.indeema.introview;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -65,15 +63,11 @@ public class IntroView extends RelativeLayout {
         mQuarterWidth = mDisplayWidth / mItemList.size();
         mIntroRadius = (int) ((mDisplayWidth - DisplayUtils.getDensity(activity) * DEFAULT_IMAGE_SIZE) / 2);
         mAngles = new int[]{0, -90, -180, -270};
-
-        setBackgroundColor(ContextCompat.getColor(activity, R.color.image_background));
         RelativeLayout.LayoutParams containerParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+                (int) DisplayUtils.convertDpToPixel(activity, 350)
         );
-        containerParams.addRule(CENTER_IN_PARENT);
         this.setLayoutParams(containerParams);
-
 
         mIntroItems = new View[mItemList.size()];
         addViewsToParent(activity, mIntroItems);
@@ -117,24 +111,13 @@ public class IntroView extends RelativeLayout {
         AnimationUtils.moveViewVerticallySin(mIntroItems[3], (int) (mIntroRadius * 0.7), -maxAmplitude, START_ANIMATION_DURATION,
                 new AnimationUtils.AnimationCallback() {
             @Override
-            public void onAnimationStart() {
-            }
+            public void onAnimationStart() {}
 
             @Override
             public void onAnimationEnd() {
                 turnRight();
             }
         });
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
     }
 
     public void turnRight() {
@@ -182,22 +165,6 @@ public class IntroView extends RelativeLayout {
         mSelectedItemIndex = getNextItemIndex();
     }
 
-    public void turnLeft() {
-
-    }
-
-    private int getPreviousItemIndex() {
-        return getPreviousItemIndex(mSelectedItemIndex);
-    }
-
-    private int getPreviousItemIndex(int currentIndex) {
-        if (currentIndex == 0) {
-            return mIntroItems.length - 1;
-        } else {
-            return currentIndex - 1;
-        }
-    }
-
     private int getNextItemIndex() {
         return getNextItemIndex(mSelectedItemIndex);
     }
@@ -208,5 +175,9 @@ public class IntroView extends RelativeLayout {
         } else {
             return currentIndex + 1;
         }
+    }
+
+    public int getSelectedPosition() {
+        return mSelectedItemIndex;
     }
 }

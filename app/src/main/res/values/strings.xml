@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Test</string>
+    <string name="app_name">Intro</string>
+    <string name="next">Next</string>
+    <string name="title_smart_technologies">Smart technologies - smart business</string>
+    <string name="title_money_income">Money income increasing</string>
+    <string name="title_team_meetings">Team meetings</string>
+    <string name="title_save_money">Save money with Indeema</string>
+    <string name="description_smart_technologies">Think about your business while we think about technology! In Indeema we use newest technologies in Web, Mobile and desktop development for implementing your idea into real life. Working with us you\'ll see how difficult becomes simple, how technology becomes easy to understand.</string>
+    <string name="description_money_income">In Indeema we\'re interested in helping our clients to reach their targets. We\'re interested to transform your idea into real business. Working closely with our Business analyst and development team you\'ll know how to involve new clients, increase ROI and money income.</string>
+    <string name="description_team_meetings">In Indeema we support \'face to face\' meetings and \'face to face\' responsibility. Our customers know each their development team member they work with. Working with us you\'ll get daily meetings, brainstorming, scientific discussions and researches, reporting, weekly demo\'s and real-time development tracking.  Want to watch your idea becomes a business reality - just get in touch with us!</string>
+    <string name="description_save_money">It\'s time to spend less money for managing your business. Forget about daily routine - remind about technology!  Working with Indeema you\'ll get business optimisation solution customised exactly to your business needs.</string>
 </resources>
