@@ -8,10 +8,12 @@ package com.indeema.introview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.util.List;
@@ -56,7 +58,7 @@ public class IntroView extends RelativeLayout {
         if (mItemList == null || activity == null) {
             return;
         }
-        mSelectedItemIndex = - 1;
+        mSelectedItemIndex = -1;
 
         // Get base screen data
         mDisplayWidth = DisplayUtils.getDisplayWidth(activity);
@@ -65,7 +67,7 @@ public class IntroView extends RelativeLayout {
         mAngles = new int[]{0, -90, -180, -270};
         RelativeLayout.LayoutParams containerParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) DisplayUtils.convertDpToPixel(activity, 350)
+                (int) DisplayUtils.convertDpToPixel(activity, 300)
         );
         this.setLayoutParams(containerParams);
 
@@ -89,9 +91,11 @@ public class IntroView extends RelativeLayout {
 
         // Init views
         for (int i = 0; i < mItemList.size(); i++) {
-            View view = new View(activity);
+            View view = new ImageView(activity);
             view.setId(i);
-            ViewUtils.setBackground(activity, mItemList.get(i).getmDrawableResourceId(), view);
+            ((ImageView) view).setImageDrawable(
+                    ContextCompat.getDrawable(activity, mItemList.get(i).getmDrawableResourceId()));
+            ViewUtils.setBackground(activity, R.drawable.bg_circle_white, view);
             view.setLayoutParams(viewParams);
             view.setPadding((int) ViewUtils.convertDpToPixel(activity, 20),
                     (int) ViewUtils.convertDpToPixel(activity, 20),
@@ -110,14 +114,15 @@ public class IntroView extends RelativeLayout {
         AnimationUtils.moveViewHorizontallySin(mIntroItems[2], -mIntroRadius, -maxAmplitude, START_ANIMATION_DURATION, null);
         AnimationUtils.moveViewVerticallySin(mIntroItems[3], (int) (mIntroRadius * 0.7), -maxAmplitude, START_ANIMATION_DURATION,
                 new AnimationUtils.AnimationCallback() {
-            @Override
-            public void onAnimationStart() {}
+                    @Override
+                    public void onAnimationStart() {
+                    }
 
-            @Override
-            public void onAnimationEnd() {
-                turnRight();
-            }
-        });
+                    @Override
+                    public void onAnimationEnd() {
+                        turnRight();
+                    }
+                });
     }
 
     public void turnRight() {
