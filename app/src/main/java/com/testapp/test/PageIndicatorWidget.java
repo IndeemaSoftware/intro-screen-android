@@ -55,7 +55,7 @@ public class PageIndicatorWidget extends View {
         mDefaultPaint.setStrokeCap(Paint.Cap.ROUND);
 
         mSelectedPaint = new Paint();
-        mSelectedPaint.setColor(ContextCompat.getColor(context, R.color.color_red));
+        mSelectedPaint.setColor(ContextCompat.getColor(context, R.color.green));
         mSelectedPaint.setAntiAlias(true);
         mSelectedPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mSelectedPaint.setStrokeJoin(Paint.Join.ROUND);

@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingBottom="12dp"
-            android:textColor="@color/color_logo_red"
+            android:textColor="@color/green"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/color_black_66_opacity"
+            android:textColor="@color/gray"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -54,7 +54,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_selector"
-        android:onClick="onNextClick"
         android:text="@string/next"
         android:textColor="@color/black" />
 </RelativeLayout>

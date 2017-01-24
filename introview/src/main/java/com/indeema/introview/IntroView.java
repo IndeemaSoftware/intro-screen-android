@@ -67,16 +67,16 @@ public class IntroView extends RelativeLayout {
         mAngles = new int[]{0, -90, -180, -270};
         RelativeLayout.LayoutParams containerParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) DisplayUtils.convertDpToPixel(activity, 300)
+                (int) DisplayUtils.convertDpToPixel(activity, 340)
         );
         this.setLayoutParams(containerParams);
 
         mIntroItems = new View[mItemList.size()];
         addViewsToParent(activity, mIntroItems);
 
-        ViewUtils.setZ(activity, 6, TypedValue.COMPLEX_UNIT_DIP, mIntroItems);
         ViewUtils.scaleViews(0.7f, mIntroItems);
         ViewUtils.setViewsAlpha(1f, mIntroItems);
+        ViewUtils.setZ(activity, 6, TypedValue.COMPLEX_UNIT_DIP, mIntroItems);
 
         mSelectedItemIndex = mIntroItems.length - 1;
         startAnimation();
@@ -93,14 +93,11 @@ public class IntroView extends RelativeLayout {
         for (int i = 0; i < mItemList.size(); i++) {
             View view = new ImageView(activity);
             view.setId(i);
+            ViewUtils.setBackground(activity, R.drawable.bg_circle_white, view);
             ((ImageView) view).setImageDrawable(
                     ContextCompat.getDrawable(activity, mItemList.get(i).getmDrawableResourceId()));
-            ViewUtils.setBackground(activity, R.drawable.bg_circle_white, view);
+            ((ImageView) view).setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             view.setLayoutParams(viewParams);
-            view.setPadding((int) ViewUtils.convertDpToPixel(activity, 20),
-                    (int) ViewUtils.convertDpToPixel(activity, 20),
-                    (int) ViewUtils.convertDpToPixel(activity, 20),
-                    (int) ViewUtils.convertDpToPixel(activity, 20));
             this.addView(view);
             mIntroItems[i] = view;
         }
@@ -108,15 +105,13 @@ public class IntroView extends RelativeLayout {
 
     private void startAnimation() {
         int maxAmplitude = mQuarterWidth / 2;
-
         AnimationUtils.moveViewHorizontallySin(mIntroItems[0], mIntroRadius, maxAmplitude, START_ANIMATION_DURATION, null);
         AnimationUtils.moveViewVerticallySin(mIntroItems[1], (int) (-mIntroRadius * 0.7), maxAmplitude, START_ANIMATION_DURATION, null);
         AnimationUtils.moveViewHorizontallySin(mIntroItems[2], -mIntroRadius, -maxAmplitude, START_ANIMATION_DURATION, null);
         AnimationUtils.moveViewVerticallySin(mIntroItems[3], (int) (mIntroRadius * 0.7), -maxAmplitude, START_ANIMATION_DURATION,
                 new AnimationUtils.AnimationCallback() {
                     @Override
-                    public void onAnimationStart() {
-                    }
+                    public void onAnimationStart() {}
 
                     @Override
                     public void onAnimationEnd() {

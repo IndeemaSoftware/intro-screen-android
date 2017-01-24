@@ -7,8 +7,10 @@
 package com.testapp.test;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,7 +22,7 @@ import com.indeema.introview.IntroView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final long SWITCH_ITEM_DURATION = 1200;
     private IntroView mIntroView;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mItemDescriptionTV;
     private PageIndicatorWidget mPageIndicator;
     private List<IntroModel> mItems;
+    private Button mNextBtn;
     private int mSelectedItemIndex;
     private int mDisplayWidth;
 
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContainer = (RelativeLayout) findViewById(R.id.activity_main);
+        mNextBtn = (Button) findViewById(R.id.next_btn);
+        mNextBtn.setOnClickListener(this);
 
         mItems = new ArrayList<>();
         mItems.add(new IntroModel(R.drawable.ic_wifi));
@@ -63,12 +68,21 @@ public class MainActivity extends AppCompatActivity {
         replaceItemDescription();
     }
 
-    public void onNextClick(View view) {
+    @Override
+    public void onClick(View view) {
+        mNextBtn.setEnabled(false);
         mIntroView.turnRight();
 
         mSelectedItemIndex = mIntroView.getSelectedPosition();
         mPageIndicator.switchToNextItem();
         replaceItemDescription();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mNextBtn.setEnabled(true);
+            }
+        }, 1200);
     }
 
     private void replaceItemDescription() {
@@ -76,8 +90,7 @@ public class MainActivity extends AppCompatActivity {
         AnimationUtils.moveViewHorizontallyWithAlpha(mInfoLayout, 0, -mDisplayWidth, 1f, -1f, duration,
                 new AnimationUtils.AnimationCallback() {
             @Override
-            public void onAnimationStart() {
-            }
+            public void onAnimationStart() {}
 
             @Override
             public void onAnimationEnd() {

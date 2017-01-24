@@ -13,6 +13,7 @@
 
     <color name="color_logo_red">#a72b31</color>
     <color name="color_black_66_opacity">#a8000000</color>
-    <color name="green">#0c731c</color>
+    <color name="green">#49b15c</color>
+    <color name="gray">#3e4346</color>
 
 </resources>
